@@ -5,9 +5,9 @@
   "scripts": {
     "dev": "nodemon src/index.js"
   },
-  "author": "Nerea",
+  "author": "Nerea Munoz",
   "license": "ISC",
-  "description": "",
+  "description": "Mi primera API, para el TFG",
   "dependencies": {
     "express": "^4.19.2",
     "morgan": "^1.10.0",

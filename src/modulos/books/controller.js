@@ -2,6 +2,10 @@ const db = require('../../dataBase/db')
 
 const TABLA = 'BOOK'
 
+function addBook(newBook) {
+    return db.addRegister(TABLA, newBook);
+}
+
 // Busca todos los registros de la tabla especificada
 function fetchAll() {
     return db.fetchAll(TABLA)
@@ -16,21 +20,27 @@ function fetchByTitle(title) {
     return db.fetchByTitle(TABLA, title)
 }
 
+// Libro por autor
+function fetchByAuthor(author) {
+    return db.fetchByAuthor(TABLA, author)
+}
+
+fetchByAuthor
+
 // Elimina libro mediante id
 function deleteById(id) {
     return db.deleteById(TABLA, id);
 }
 
-function addBook(newBook) {
-    return db.addRegister(TABLA, newBook);
-}
+
 
 
 
 module.exports = {
+    addBook,
     fetchAll,
     fetchById,
     fetchByTitle,
+    fetchByAuthor,
     deleteById,
-    addBook
 }

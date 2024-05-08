@@ -38,74 +38,6 @@ function dbConnection(){
 
 dbConnection();
 
-
-// Busca todos los registros de una tabla
-function fetchAll(table) {
-    return new Promise((resolve, reject) => {
-        const query = 'SELECT * FROM ??';
-        connection.query(query, [table], (error, result) => {
-            if (error) {
-                return reject(error);
-            }
-            resolve(result);
-        });
-    });
-}
-
-// Busca mediante id
-function fetchById(table, id) {
-    return new Promise((resolve, reject) => {
-        const query = 'SELECT * FROM ?? WHERE id = ?';
-        connection.query(query, [table, id], (error, result) => {
-            if (error) {
-                return reject(error);
-            }
-            resolve(result);
-        });
-    });
-}
-
-// Busca un USER mediante el uid
-function fetchUser(table, uid) {
-    return new Promise((resolve, reject) => {
-        const query = 'SELECT * FROM ?? WHERE uid = ?';
-        connection.query(query, [table, uid], (error, result) => {
-            if (error) {
-                return reject(error);
-            }
-            resolve(result);
-        });
-    });
-}
-
-
-
-// Buscar libros por título
-function fetchByTitle(table, title) {
-    return new Promise((resolve, reject) => {
-        const query = 'SELECT * FROM ?? WHERE title LIKE ?';
-        connection.query(query, [table, `%${title}%`], (error, result) => {
-            if (error) {
-                return reject(error);
-            }
-            resolve(result);
-        });
-    });
-}
-
-// Eliminar por id
-function deleteById(table, id) {
-    return new Promise((resolve, reject) => {
-        const query = 'DELETE FROM ?? WHERE id = ?';
-        connection.query(query, [table, id], (error, result) => {
-            if (error) {
-                return reject(error);
-            }
-            resolve(result);
-        });
-    });
-}
-
 // Función para agregar un REGISTRO  a una TABLA
 function addRegister(table, registerData) {
     // Filtrar datos para remover campos no definidos
@@ -138,6 +70,96 @@ function addRegister(table, registerData) {
     });
 }
 
+// Busca todos los registros de una tabla
+function fetchAll(table) {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT * FROM ??';
+        connection.query(query, [table], (error, result) => {
+            if (error) {
+                return reject(error);
+            }
+            resolve(result);
+        });
+    });
+}
+
+// Busca un USER mediante el uid 
+function fetchUser(table, uid) {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT * FROM ?? WHERE uid = ?';
+        connection.query(query, [table, uid], (error, result) => {
+            if (error) {
+                return reject(error);
+            }
+            resolve(result);
+        });
+    });
+}
+
+// Busca mediante id
+function fetchById(table, id) {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT * FROM ?? WHERE id = ?';
+        connection.query(query, [table, id], (error, result) => {
+            if (error) {
+                return reject(error);
+            }
+            resolve(result);
+        });
+    });
+}
+
+// Buscar libros por título
+function fetchByTitle(table, title) {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT * FROM ?? WHERE title LIKE ?';
+        connection.query(query, [table, `%${title}%`], (error, result) => {
+            if (error) {
+                return reject(error);
+            }
+            resolve(result);
+        });
+    });
+}
+
+// Buscar mediante autor
+function fetchByAuthor(table, author) {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT * FROM ?? WHERE author LIKE ?';
+        connection.query(query, [table, `%${author}%`], (error, result) => {
+            if (error) {
+                return reject(error);
+            }
+            resolve(result);
+        });
+    });
+}
+
+// Buscar por idioma
+
+// Buscar por ISBN
+
+// Buscar por categoría
+
+
+
+
+
+// Eliminar por id
+function deleteById(table, id) {
+    return new Promise((resolve, reject) => {
+        const query = 'DELETE FROM ?? WHERE id = ?';
+        connection.query(query, [table, id], (error, result) => {
+            if (error) {
+                return reject(error);
+            }
+            resolve(result);
+        });
+    });
+}
+
+
+
 
 
 // Elimina un registro mefiante el id
@@ -146,11 +168,12 @@ function deleteRecord(table, id) {
 }
 
 module.exports = {
+    addRegister,
     fetchAll,
     fetchUser,
     fetchById,
     fetchByTitle,
+    fetchByAuthor,
     deleteById,
-    addRegister,
     deleteRecord,
 }
