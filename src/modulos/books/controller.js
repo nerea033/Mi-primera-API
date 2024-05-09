@@ -25,15 +25,25 @@ function fetchByAuthor(author) {
     return db.fetchByAuthor(TABLA, author)
 }
 
-fetchByAuthor
+// Libro por idioma
+function fetchByLanguage(language) {
+    return db.fetchByLanguage(TABLA, language)
+}
+
+// Libro por categoría
+function fetchByCategory(language) {
+    return db.fetchByCategory(TABLA, language)
+}
+
+// Por ISBN
+function fetchByIsbn(language) {
+    return db.fetchByIsbn(TABLA, language)
+}
 
 // Elimina libro mediante id
 function deleteById(id) {
     return db.deleteById(TABLA, id);
 }
-
-
-
 
 
 module.exports = {
@@ -42,5 +52,8 @@ module.exports = {
     fetchById,
     fetchByTitle,
     fetchByAuthor,
+    fetchByLanguage,
+    fetchByCategory,
+    fetchByIsbn,
     deleteById,
 }

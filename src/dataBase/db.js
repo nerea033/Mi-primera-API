@@ -136,11 +136,44 @@ function fetchByAuthor(table, author) {
 }
 
 // Buscar por idioma
-
-// Buscar por ISBN
+function fetchByLanguage(table, language){
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT * FROM ?? WHERE language LIKE ?';
+        connection.query(query, [table, `%${language}%`], (error, result) => {
+            if (error) {
+                return reject(error);
+            }
+            resolve(result);
+        });
+    });
+}
 
 // Buscar por categoría
+function fetchByCategory(table, category){
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT * FROM ?? WHERE category LIKE ?';
+        connection.query(query, [table, `%${category}%`], (error, result) => {
+            if (error){
+                return reject(error);
+            }
+            resolve(result);
+        });
+    });
+}
 
+
+// Buscar por ISBN
+function fetchByIsbn(table, isbn){
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT * FROM ?? WHERE isbn LIKE ?';
+        connection.query(query, [table, `${isbn}%`], (error, result) => {
+            if (error){
+                return reject(error);
+            }
+            resolve(result);
+        });
+    });
+}
 
 
 
@@ -174,6 +207,9 @@ module.exports = {
     fetchById,
     fetchByTitle,
     fetchByAuthor,
+    fetchByLanguage,
+    fetchByCategory,
+    fetchByIsbn,
     deleteById,
     deleteRecord,
 }

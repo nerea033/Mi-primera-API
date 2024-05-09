@@ -65,9 +65,19 @@ async function handleSearch(req, res) {
         } else if (req.query.author) {
             // Si se proporciona un parámetro 'author', realiza una búsqueda por autor
             all = await controller.fetchByAuthor(req.query.author);
+
+        } else if (req.query.language){
+            all = await controller.fetchByLanguage(req.query.language);
+
+        } else if (req.query.category){
+            all = await controller.fetchByCategory(req.query.category);
+
+        } else if (req.query.isbn){
+            all = await controller.fetchByIsbn(req.query.isbn);
+
         } else {
             // Si no se proporciona ninguno de los parámetros anteriores, envía un error
-            return res.status(400).send({ error: "Se requiere un parámetro de búsqueda (title o author)" });
+            return res.status(400).send({ error: "Se requiere un parámetro de búsqueda (atributos de libro)" });
         }
 
         // Si la búsqueda es exitosa y se obtienen resultados, envía los resultados
@@ -78,7 +88,7 @@ async function handleSearch(req, res) {
     }
 };
 
-
+// Eliminar mediante el ID
 async function deleteById(req, res) {
     try {
         const resultado = await controller.deleteById(req.params.id); 
