@@ -1,6 +1,14 @@
-const db = require('../../dataBase/db')
+/**
+ * Controlador para operaciones CRUD de libros en la base de datos.
+ * Este módulo define funciones para añadir, buscar, actualizar y eliminar libros,
+ * aprovechando las funcionalidades del módulo de base de datos.
+ *
+ * @module bookController
+ * @requires ../../dataBase/db - Módulo de base de datos que proporciona las funciones de manipulación de la base de datos.
+ */
 
-const TABLA = 'BOOK'
+const db = require('../../dataBase/db')
+const TABLA = 'BOOK' // Nombre de la tabla en la base de datos para los libros.
 
 function addBook(newBook) {
     return db.addRegister(TABLA, newBook);
@@ -31,13 +39,18 @@ function fetchByLanguage(language) {
 }
 
 // Libro por categoría
-function fetchByCategory(language) {
-    return db.fetchByCategory(TABLA, language)
+function fetchByCategory(category) {
+    return db.fetchByCategory(TABLA, category)
 }
 
 // Por ISBN
-function fetchByIsbn(language) {
-    return db.fetchByIsbn(TABLA, language)
+function fetchByIsbn(isbn) {
+    return db.fetchByIsbn(TABLA, isbn)
+}
+
+// Actualizar un registro
+function updateRegister(idField, id, updateData){
+    return db.updateRegister(TABLA, idField, id, updateData)
 }
 
 // Elimina libro mediante id
@@ -55,5 +68,6 @@ module.exports = {
     fetchByLanguage,
     fetchByCategory,
     fetchByIsbn,
+    updateRegister,
     deleteById,
 }

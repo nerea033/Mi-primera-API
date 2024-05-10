@@ -1,18 +1,33 @@
+/**
+ * Rutas para operaciones CRUD sobre usuarios.
+ * Este módulo define las rutas HTTP para operaciones de creación, lectura y actualización sobre la tabla de usuarios.
+ *
+ * @module userRoute
+ * @requires express
+ * @requires ../responses - Módulo para manejar respuestas estándar.
+ * @requires ./controller - Controlador para operaciones de usuarios.
+ */
+
 const express = require('express');
-
 const response = require('../responses')
-const controller = require('./controller')
+const controller = require('./userContoller')
 
+// Creación de un enrutador de Express.
 const router = express.Router();
 
-// Cada ruta es una de las funciones CRUD en la base de datos que desarrollamos en 'db.js'
-
+// Asociación de métodos del controlador a rutas.
 router.post('/', addUser)       // Ruta para agregar un libro.
 router.get('/:uid', fetchUser)  // Ruta para obtener un usuario por UID (específica).
 router.get('/', fetchAll)       // Ruta para obtener todos los registros (genérica).
 
 
-// Ruta para consultar todos los registros de una tabla
+/**
+ * Ruta para obtener todos los usuarios.
+ * Utiliza el método fetchAll del controlador para obtener todos los registros.
+ *
+ * @param {express.Request} req - El objeto de solicitud HTTP.
+ * @param {express.Response} res - El objeto de respuesta HTTP.
+ */
 async function fetchAll(req, res) {
     try {
         const todos = await controller.fetchAll(); // Await the resolution of the promise
@@ -22,7 +37,13 @@ async function fetchAll(req, res) {
     }
 };
 
-// Ruta para consultar usuarios según su uid
+/**
+ * Ruta para obtener un usuario específico por UID.
+ * Utiliza el método fetchUser del controlador para obtener un usuario específico.
+ *
+ * @param {express.Request} req - El objeto de solicitud HTTP.
+ * @param {express.Response} res - El objeto de respuesta HTTP.
+ */
 async function fetchUser(req, res) {
     try {
         const todos = await controller.fetchUser(req.params.uid); 
@@ -32,7 +53,13 @@ async function fetchUser(req, res) {
     }
 };
 
-// Agregar un usuario
+/**
+ * Ruta para agregar un nuevo usuario.
+ * Utiliza el método addUser del controlador para agregar un usuario a la base de datos.
+ *
+ * @param {express.Request} req - El objeto de solicitud HTTP, esperando datos del usuario en el cuerpo.
+ * @param {express.Response} res - El objeto de respuesta HTTP.
+ */
 async function addUser(req, res) {
     try {
         const result = await controller.addUser(req.body);

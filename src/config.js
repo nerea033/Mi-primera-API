@@ -1,5 +1,23 @@
+/**
+ * Módulo de configuración para la aplicación.
+ * 
+ * Carga las variables de entorno desde un archivo `.env` utilizando `dotenv` y
+ * define la configuración necesaria para la aplicación y la base de datos MySQL.
+ * 
+ * @module config
+ * @requires dotenv
+ */
+
+/**
+ * Invoca la función `config` de `dotenv` para que las variables de entorno definidas
+ * en el archivo `.env` estén disponibles a través de `process.env`.
+ */
 require('dotenv').config();
 
+
+/**
+ * Exporta un objeto de configuración con ajustes para la aplicación y la base de datos.
+ */
 module.exports = {
     app: {
         port: process.env.PORT || 4000 //coge el puerto que he asignado pero si no lo reconoce coge el 4000
