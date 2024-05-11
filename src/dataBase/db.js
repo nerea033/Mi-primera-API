@@ -36,6 +36,17 @@ function dbConnection(){
             setTimeout(dbConnection, 2000); // Intenta reconectar después de 2 segundos
 
         }else {
+            // Configuración de las variables de sesión después de establecer la conexión
+            connection.query('SET session wait_timeout = 3600', (err, results) => {
+                if (err) throw err;
+                console.log('wait_timeout establecido');
+            });
+
+            connection.query('SET session interactive_timeout = 3600', (err, results) => {
+                if (err) throw err;
+                console.log('interactive_timeout establecido');
+            });
+
             console.log('db conectada')
         }
     });
