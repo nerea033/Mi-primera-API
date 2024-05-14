@@ -10,6 +10,10 @@ const db = require('../../dataBase/db')
 
 const TABLA = 'USER'
 
+function addUser(dataUser){
+    return db.addRegister(TABLA, dataUser)
+}
+
 // Busca todos los registros de la tabla especificada
 function fetchAll() {
     return db.fetchAll(TABLA)
@@ -20,12 +24,14 @@ function fetchUser(uid) {
     return db.fetchUser(TABLA, uid)
 }
 
-function addUser(dataUser){
-    return db.addRegister(TABLA, dataUser)
+// Elimina usuario mediante uid
+function deleteByUid(id) {
+    return db.deleteByUid(TABLA, id);
 }
 
 module.exports = {
+    addUser,
     fetchAll,
     fetchUser,
-    addUser
+    deleteByUid
 }

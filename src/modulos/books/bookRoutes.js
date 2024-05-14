@@ -40,6 +40,7 @@ async function addBook(req, res) {
             response.error(req, res, "Error al agregar el libro", 400);
         }
     } catch (error) {
+        console.error("Error en el servidor al intentar agregar un libro", error);
         response.error(req, res, "Internal server error", 500, error.message);
     }
 }
@@ -54,6 +55,7 @@ async function fetchAll(req, res) {
         const todos = await controller.fetchAll(); // Await the resolution of the promise
         response.success(req, res, todos, 200);   // Send success response with the data
     } catch (error) {
+        console.error("Error al buscar todos los libros", error);
         response.error(req, res, "Internal server error", 500, error.message); // Handle errors
     }
 };
@@ -72,6 +74,7 @@ async function fetchById(req, res) {
             response.success(req, res, book, 200);
         }
     } catch (error) {
+        console.error("Error el el servidor al buscar un libro por 'id'", error);
         response.error(req, res, "Error interno del servidor", 500, error.message);
     }
 }
@@ -111,6 +114,7 @@ async function handleSearch(req, res) {
         response.success(req, res, all, 200);
     } catch (error) {
         // Maneja cualquier error que ocurra durante la búsqueda
+        console.error("Error al realizer la búsqueda de un libro mediante sus atributos", error);
         response.error(req, res, "Internal server error", 500, error.message);
     }
 };
@@ -157,6 +161,7 @@ async function deleteById(req, res) {
             response.error(req, res, "Libro no encontrado", 404);
         }
     } catch (error) {
+        console.error("Error al eliminar un libro mediante su 'id'", error)
         response.error(req, res, "Internal server error", 500, error.message); 
     }
 };

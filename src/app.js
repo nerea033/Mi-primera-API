@@ -19,6 +19,9 @@ const config = require('./config');
  */
 const users = require('./modulos/users/userRoutes.js');
 const books = require('./modulos/books/bookRoutes.js');
+const cart = require('./modulos/cart/cartRoutes.js');
+const favorite = require('./modulos/favorite/favoriteRoutes.js');
+const ticket = require('./modulos/ticket/ticketRoutes.js');
 
 /**
  * Crea una nueva instancia de una aplicación Express.
@@ -44,6 +47,9 @@ app.set('port', config.app.port);
  */
 app.use('/api/users', users);
 app.use('/api/books', books);
+app.use('/api/cart', cart);
+app.use('/api/favorite', favorite);
+app.use('/api/ticket', ticket);
 
 /**
  * Exporta la instancia de la aplicación Express para permitir que otros módulos la utilicen,

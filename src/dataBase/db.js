@@ -37,7 +37,7 @@ function dbConnection(){
 
         }else {
             // Configuración de las variables de sesión después de establecer la conexión
-            connection.query('SET session wait_timeout = 3600', (err, results) => {
+            connection.query('SET session wait_timeout = 3600', (err, results) => { // Lo establezco a 1 hora (3600 segundos)
                 if (err) throw err;
                 console.log('wait_timeout establecido');
             });
@@ -298,7 +298,24 @@ function updateRegister(table, idField, id, updateData) {
     });
 }
 
-
+/**
+ * Elimina un usuario por su identificador en la base de datos.
+ * 
+ * @param {string} table - Nombre de la tabla de la cual se eliminará el registro.
+ * @param {number|string} uid - El valor del identificador del registro a eliminar.
+ * @returns {Promise<Object>} Una promesa que se resuelve con el resultado de la operación de eliminación.
+ */
+function deleteByUid(table, uid) {
+    return new Promise((resolve, reject) => {
+        const query = 'DELETE FROM ?? WHERE uid = ?';
+        connection.query(query, [table, uid], (error, result) => {
+            if (error) {
+                return reject(error);
+            }
+            resolve(result);
+        });
+    });
+}
 
 /**
  * Elimina un registro por su identificador de una tabla específica en la base de datos.
@@ -331,5 +348,6 @@ module.exports = {
     fetchByCategory,
     fetchByIsbn,
     updateRegister,
+    deleteByUid,
     deleteById,
 }
