@@ -71,7 +71,7 @@ async function fetchUser(req, res) {
         const todos = await controller.fetchUser(req.params.uid); 
         response.success(req, res, todos, 200);   
     } catch (error) {
-        console.error("Error en el servidor al obtener el usaurio por 'uid'")
+        console.error("Error en el servidor al obtener el usuario por 'uid'", error)
         response.error(req, res, "Internal server error", 500, error.message); 
     }
 };
