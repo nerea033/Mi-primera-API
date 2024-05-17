@@ -1,34 +1,34 @@
 /**
- * Enrutador para manejar las operaciones de gestión del crrito del usuario.
- * Este módulo define las operaciones CRUD a través de rutas HTTP.
+ * Router to handle user cart management operations.
+ * This module defines CRUD operations via HTTP routes.
  *
  * @module cartRoutes
  * @requires express
- * @requires ../responses - Módulo para manejar respuestas estandarizadas.
- * @requires ./cartController - Controlador para manejar operaciones sobre los datos del carrito.
+ * @requires ../responses - Module to handle standardized responses.
+ * @requires ./cartController - Controller to handle cart data operations.
  */
 
 const express = require('express');
 const response = require('../responses')
 const controller = require('./cartController')
 
-// Inicializa el enrutador de Express, para manejar solicitudes.
+// Initialize the Express router to handle requests.
 const router = express.Router();
 
-// Configuración de rutas para operaciones CRUD. Cada ruta corresponde a una operación en la base de datos.
-// Las rutas son definidas con atención al orden de especificidad: las rutas más específicas van primero.
+// Route configuration for CRUD operations. Each route corresponds to a database operation.
+// Routes are defined with attention to the order of specificity: the most specific routes go first.
 
-router.get('/:id', fetchById);           // Específica - maneja IDs
-router.delete('/:id', deleteById);       // Igual, específica pero con método DELETE
-router.get('/', fetchAll);               // General - al final
+router.get('/:id', fetchById);           // Specific - handles IDs
+router.delete('/:id', deleteById);       // Likewise, specific but with DELETE method
+router.get('/', fetchAll);               // General - at the end
 router.post('/', addCart);
 router.put('/update', updateRegister);
 
 
 /**
- * Agrega un nuevo registo a la tabla carrito.
- * @param {Object} req - El objeto de solicitud Express, que contiene el cuerpo del carrito a agregar.
- * @param {Object} res - El objeto de respuesta Express.
+ * Adds a new record to the cart table.
+ * @param {Object} req - The Express request object, containing the cart body to add.
+ * @param {Object} res - The Express response object.
  */
 async function addCart(req, res) {
     try {
@@ -45,9 +45,9 @@ async function addCart(req, res) {
 }
 
 /**
- * Recupera todos los registros de la base de datos.
- * @param {Object} req - El objeto de solicitud Express.
- * @param {Object} res - El objeto de respuesta Express.
+ * Fetches all records from the database.
+ * @param {Object} req - The Express request object.
+ * @param {Object} res - The Express response object.
  */
 async function fetchAll(req, res) {
     try {
@@ -60,9 +60,9 @@ async function fetchAll(req, res) {
 };
 
 /**
- * Recupera un registro específico en el carrito por su ID.
- * @param {Object} req - El objeto de solicitud Express, que debe incluir el ID del carrito como parámetro.
- * @param {Object} res - El objeto de respuesta Express.
+ * Fetches a specific cart record by its ID.
+ * @param {Object} req - The Express request object, which should include the cart ID as a parameter.
+ * @param {Object} res - The Express response object.
  */
 async function fetchById(req, res) {
     try {
@@ -80,16 +80,16 @@ async function fetchById(req, res) {
 
 
 /**
- * Actualiza un registro en la base de datos.
- * @param {Object} req - El objeto de solicitud Express, que contiene el nombre de la tabla, el campo ID, el valor ID y los datos de actualización.
- * @param {Object} res - El objeto de respuesta Express.
+ * Updates a record in the database.
+ * @param {Object} req - The Express request object, containing the table name, the ID field, the ID value, and the update data.
+ * @param {Object} res - The Express response object.
  */
 async function updateRegister(req, res) {
     try {
-        // Descomponer el body para obtener los parámetros necesarios
+        // Destructure the body to get the necessary parameters.
         const {idField, id, updateData } = req.body;
 
-        // Verificar si todos los parámetros necesarios están presentes
+        // Verify if all necessary parameters are present.
         if (!idField || !id || !updateData) {
             return response.error(req, res, "Datos insuficientes para la actualización", 400);
         }
@@ -108,9 +108,9 @@ async function updateRegister(req, res) {
 
 
 /**
- * Elimina un registro de la tabla carrito utilizando su ID.
- * @param {Object} req - El objeto de solicitud Express, que debe incluir el ID del registro del carrito como parámetro.
- * @param {Object} res - El objeto de respuesta Express.
+ * Deletes a record from the cart table by its ID.
+ * @param {Object} req - The Express request object, which should include the cart record ID as a parameter.
+ * @param {Object} res - The Express response object.
  */
 async function deleteById(req, res) {
     try {
@@ -127,5 +127,5 @@ async function deleteById(req, res) {
 };
 
 
-// Exportar el enrutador para ser utilizado en la aplicación principal.
+// Export the router to be used in the main application.
 module.exports = router;

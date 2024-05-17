@@ -1,7 +1,7 @@
 /**
- * Configuración principal de la aplicación Express.
+ * Main configuration for the Express application.
  * 
- * Configura middlewares, rutas y otras opciones necesarias para el servidor.
+ * Configures middlewares, routes, and other necessary options for the server.
  * 
  * @module app
  * @requires express
@@ -9,13 +9,13 @@
  * @requires config
  */
 
-// Importación de módulos necesarios
+//  Import necessary modules
 const express = require('express');
 const morgan = require('morgan');
 const config = require('./config');
 
 /**
- * Importa los módulos de rutas para usuarios y libros
+ * Import route modules for users, books, cart, favorites, and tickets.
  */
 const users = require('./modulos/users/userRoutes.js');
 const books = require('./modulos/books/bookRoutes.js');
@@ -24,26 +24,26 @@ const favorite = require('./modulos/favorite/favoriteRoutes.js');
 const ticket = require('./modulos/ticket/ticketRoutes.js');
 
 /**
- * Crea una nueva instancia de una aplicación Express.
+ * Create a new instance of an Express application.
  * @type {express.Application}
  */
 const app = express();
 
 /**
- * Configura Morgan como middleware para registrar solicitudes en el entorno de desarrollo.
- * Además, configura middlewares para parsear JSON y datos de URL-encoded forms
+ * Configure Morgan as middleware to log requests in the development environment.
+ * Additionally, configure middlewares to parse JSON and URL-encoded form data.
  */
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
 /**
- * Establece el puerto para la aplicación usando la configuración importada
+ * Set the port for the application using the imported configuration.
  */
 app.set('port', config.app.port);
 
 /**
- * Configura las rutas base para los módulos
+ * Configure base routes for the modules.
  */
 app.use('/api/users', users);
 app.use('/api/books', books);
@@ -52,8 +52,8 @@ app.use('/api/favorite', favorite);
 app.use('/api/ticket', ticket);
 
 /**
- * Exporta la instancia de la aplicación Express para permitir que otros módulos la utilicen,
- * especialmente útil para la inicialización del servidor en otro módulo
+ * Export the instance of the Express application to allow other modules to use it,
+ * especially useful for server initialization in another module.
  * 
  * @type {express.Application}
  */

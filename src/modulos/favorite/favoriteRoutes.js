@@ -1,34 +1,34 @@
 /**
- * Enrutador para manejar las operaciones de gestión de favoritos del usuario.
- * Este módulo define las operaciones CRUD a través de rutas HTTP.
+ * Router to handle user favorite management operations.
+ * This module defines the CRUD operations through HTTP routes.
  *
  * @module favoriteRoutes
  * @requires express
- * @requires ../responses - Módulo para manejar respuestas estandarizadas.
- * @requires ./favoriteController - Controlador para manejar operaciones sobre los datos de favoritos.
+ * @requires ../responses - Module to handle standardized responses.
+ * @requires ./favoriteController - Controller to handle operations on favorite data.
  */
 
 const express = require('express');
 const response = require('../responses')
 const controller = require('./favoriteController')
 
-// Inicializa el enrutador de Express, para manejar solicitudes.
+// Initialize the Express router to handle requests.
 const router = express.Router();
 
-// Configuración de rutas para operaciones CRUD. Cada ruta corresponde a una operación en la base de datos.
-// Las rutas son definidas con atención al orden de especificidad: las rutas más específicas van primero.
+// Route configuration for CRUD operations. Each route corresponds to a database operation.
+// Routes are defined with attention to order specificity: more specific routes go first.
 
-router.get('/:id', fetchById);           // Específica - maneja IDs
-router.delete('/:id', deleteById);       // Igual, específica pero con método DELETE
-router.get('/', fetchAll);               // General - al final
+router.get('/:id', fetchById);           // Specific - handles IDs
+router.delete('/:id', deleteById);       // Also specific but with DELETE method
+router.get('/', fetchAll);               // General - at the end
 router.post('/', addFavorites);
 router.put('/update', updateRegister);
 
 
 /**
- * Agrega un nuevo registo a la tabla favoritos.
- * @param {Object} req - El objeto de solicitud Express, que contiene el cuerpo de favoritos a agregar.
- * @param {Object} res - El objeto de respuesta Express.
+ * Adds a new record to the favorites table.
+ * @param {Object} req - The Express request object, containing the favorite data to add in the body.
+ * @param {Object} res - The Express response object.
  */
 async function addFavorites(req, res) {
     try {
@@ -45,17 +45,17 @@ async function addFavorites(req, res) {
 }
 
 /**
- * Recupera todos los registros de la base de datos.
- * @param {Object} req - El objeto de solicitud Express.
- * @param {Object} res - El objeto de respuesta Express.
+ * Retrieves all records from the database.
+ * @param {Object} req - The Express request object.
+ * @param {Object} res - The Express response object.
  */
 async function fetchAll(req, res) {
     try {
-        const todos = await controller.fetchAll(); // Await the resolution of the promise
-        response.success(req, res, todos, 200);   // Send success response with the data
+        const todos = await controller.fetchAll(); // Await the resolution of the promise.
+        response.success(req, res, todos, 200);   // Send success response with the data.
     } catch (error) {
         console.error("Error al obtener todos los registros de favorite", error);
-        response.error(req, res, "Internal server error", 500, error.message); // Handle errors
+        response.error(req, res, "Internal server error", 500, error.message); // Handle errors.
     }
 };
 
@@ -80,16 +80,16 @@ async function fetchById(req, res) {
 
 
 /**
- * Actualiza un registro en la base de datos.
- * @param {Object} req - El objeto de solicitud Express, que contiene el nombre de la tabla, el campo ID, el valor ID y los datos de actualización.
- * @param {Object} res - El objeto de respuesta Express.
+ * Updates a record in the database.
+ * @param {Object} req - The Express request object, containing the table name, ID field, ID value, and update data.
+ * @param {Object} res - The Express response object.
  */
 async function updateRegister(req, res) {
     try {
-        // Descomponer el body para obtener los parámetros necesarios
+        // Destructure the body to get the necessary parameters.
         const {idField, id, updateData } = req.body;
 
-        // Verificar si todos los parámetros necesarios están presentes
+        // Verify that all necessary parameters are present.
         if (!idField || !id || !updateData) {
             return response.error(req, res, "Datos insuficientes para la actualización", 400);
         }
@@ -108,9 +108,9 @@ async function updateRegister(req, res) {
 
 
 /**
- * Elimina un registro de la tabla favorite utilizando su ID.
- * @param {Object} req - El objeto de solicitud Express, que debe incluir el ID del registro como parámetro.
- * @param {Object} res - El objeto de respuesta Express.
+ * Deletes a favorite record using its ID.
+ * @param {Object} req - The Express request object, which should include the record ID as a parameter.
+ * @param {Object} res - The Express response object.
  */
 async function deleteById(req, res) {
     try {
@@ -127,5 +127,5 @@ async function deleteById(req, res) {
 };
 
 
-// Exportar el enrutador para ser utilizado en la aplicación principal.
+// Export the router to be used in the main application.
 module.exports = router;

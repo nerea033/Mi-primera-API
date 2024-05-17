@@ -1,32 +1,32 @@
 /**
- * Rutas para operaciones CRUD sobre usuarios.
- * Este módulo define las rutas HTTP para operaciones de creación, lectura y actualización sobre la tabla de usuarios.
+ * Routes for CRUD operations on users.
+ * This module defines the HTTP routes for create, read, and update operations on the users table.
  *
  * @module userRoute
  * @requires express
- * @requires ../responses - Módulo para manejar respuestas estándar.
- * @requires ./controller - Controlador para operaciones de usuarios.
+ * @requires ../responses - Module for handling standard responses.
+ * @requires ./controller - Controller for user operations.
  */
 
 const express = require('express');
 const response = require('../responses')
 const controller = require('./userContoller')
 
-// Creación de un enrutador de Express.
+// Create an Express router.
 const router = express.Router();
 
 // Asociación de métodos del controlador a rutas.
-router.post('/', addUser)       // Ruta para agregar un libro.
-router.delete('/:uid', deleteByUid)
-router.get('/:uid', fetchUser)  // Ruta para obtener un usuario por UID (específica).
-router.get('/', fetchAll)       // Ruta para obtener todos los registros (genérica).
+router.post('/', addUser)       // Route to add a user.
+router.delete('/:uid', deleteByUid)  // Route to delete a user by UID.
+router.get('/:uid', fetchUser)  //  Route to get a specific user by UID. (specific).
+router.get('/', fetchAll)       // Route to get all user records. (generic).
 
 /**
- * Ruta para agregar un nuevo usuario.
- * Utiliza el método addUser del controlador para agregar un usuario a la base de datos.
+ * Route to add a new user.
+ * Uses the addUser method from the controller to add a user to the database.
  *
- * @param {express.Request} req - El objeto de solicitud HTTP, esperando datos del usuario en el cuerpo.
- * @param {express.Response} res - El objeto de respuesta HTTP.
+ * @param {express.Request} req - The HTTP request object, expecting user data in the body.
+ * @param {express.Response} res - The HTTP response object.
  */
 async function addUser(req, res) {
     try {
@@ -43,11 +43,11 @@ async function addUser(req, res) {
 }
 
 /**
- * Ruta para obtener todos los usuarios.
- * Utiliza el método fetchAll del controlador para obtener todos los registros.
+ * Route to fetch all users.
+ * Uses the fetchAll method from the controller to get all records.
  *
- * @param {express.Request} req - El objeto de solicitud HTTP.
- * @param {express.Response} res - El objeto de respuesta HTTP.
+ * @param {express.Request} req - The HTTP request object.
+ * @param {express.Response} res - The HTTP response object.
  */
 async function fetchAll(req, res) {
     try {
@@ -60,11 +60,11 @@ async function fetchAll(req, res) {
 };
 
 /**
- * Ruta para obtener un usuario específico por UID.
- * Utiliza el método fetchUser del controlador para obtener un usuario específico.
+ * Route to fetch a specific user by UID.
+ * Uses the fetchUser method from the controller to get a specific user.
  *
- * @param {express.Request} req - El objeto de solicitud HTTP.
- * @param {express.Response} res - El objeto de respuesta HTTP.
+ * @param {express.Request} req - The HTTP request object.
+ * @param {express.Response} res - The HTTP response object.
  */
 async function fetchUser(req, res) {
     try {
@@ -77,9 +77,11 @@ async function fetchUser(req, res) {
 };
 
 /**
- * Elimina un usuario de la base de datos utilizando su UID.
- * @param {Object} req - El objeto de solicitud Express, que debe incluir el uid del libro como parámetro.
- * @param {Object} res - El objeto de respuesta Express.
+ * Route to delete a user by UID.
+ * Uses the deleteByUid method from the controller to delete a user from the database using their UID.
+ *
+ * @param {express.Request} req - The Express request object, which should include the user's UID as a parameter.
+ * @param {express.Response} res - The Express response object.
  */
 async function deleteByUid(req, res) {
     try {

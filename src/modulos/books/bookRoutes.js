@@ -1,35 +1,35 @@
 /**
- * Enrutador para manejar las operaciones de gestión de libros.
- * Este módulo define las operaciones CRUD a través de rutas HTTP.
+ * Router to handle book management operations.
+ * This module defines CRUD operations via HTTP routes.
  *
  * @module bookRoutes
  * @requires express
- * @requires ../responses - Módulo para manejar respuestas estandarizadas.
- * @requires ./bookController - Controlador para manejar operaciones sobre los datos de libros.
+ * @requires ../responses - Module to handle standardized responses.
+ * @requires ./bookController - Controller to handle book data operations.
  */
 
 const express = require('express');
 const response = require('../responses')
 const controller = require('./bookController')
 
-// Inicializa el enrutador de Express, para manejar solicitudes.
+// Initialize the Express router to handle requests.
 const router = express.Router();
 
-// Configuración de rutas para operaciones CRUD. Cada ruta corresponde a una operación en la base de datos.
-// Las rutas son definidas con atención al orden de especificidad: las rutas más específicas van primero.
+// Route configuration for CRUD operations. Each route corresponds to an operation in the database.
+// Routes are defined with attention to specificity order: more specific routes go first.
 
-router.get('/search', handleSearch);      // Específica - primero
-router.get('/:id', fetchById);           // Específica - maneja IDs
-router.delete('/:id', deleteById);       // Igual, específica pero con método DELETE
-router.get('/', fetchAll);               // General - al final
+router.get('/search', handleSearch);      // Specific - first
+router.get('/:id', fetchById);           // Specific - handles IDs
+router.delete('/:id', deleteById);       // Same, specific but with DELETE method
+router.get('/', fetchAll);               // General - at the end
 router.post('/', addBook);
 router.put('/update', updateRegister);
 
 
 /**
- * Agrega un nuevo libro a la base de datos.
- * @param {Object} req - El objeto de solicitud Express, que contiene el cuerpo del libro a agregar.
- * @param {Object} res - El objeto de respuesta Express.
+ * Adds a new book to the database.
+ * @param {Object} req - The Express request object, containing the book body to add.
+ * @param {Object} res - The Express response object.
  */
 async function addBook(req, res) {
     try {
@@ -46,9 +46,9 @@ async function addBook(req, res) {
 }
 
 /**
- * Recupera todos los registros de la base de datos.
- * @param {Object} req - El objeto de solicitud Express.
- * @param {Object} res - El objeto de respuesta Express.
+ * Fetches all records from the database.
+ * @param {Object} req - The Express request object.
+ * @param {Object} res - The Express response object.
  */
 async function fetchAll(req, res) {
     try {
@@ -61,9 +61,9 @@ async function fetchAll(req, res) {
 };
 
 /**
- * Recupera un libro específico por su ID.
- * @param {Object} req - El objeto de solicitud Express, que debe incluir el ID del libro como parámetro.
- * @param {Object} res - El objeto de respuesta Express.
+ * Fetches a specific book by its ID.
+ * @param {Object} req - The Express request object, which must include the book ID as a parameter.
+ * @param {Object} res - The Express response object.
  */
 async function fetchById(req, res) {
     try {
@@ -80,20 +80,20 @@ async function fetchById(req, res) {
 }
 
 /**
- * Maneja las búsquedas de libros por título, autor, idioma, categoría o ISBN.
- * @param {Object} req - El objeto de solicitud Express, que contiene los parámetros de búsqueda.
- * @param {Object} res - El objeto de respuesta Express.
+ * Handles book searches by title, author, language, category, or ISBN.
+ * @param {Object} req - The Express request object, containing the search parameters.
+ * @param {Object} res - The Express response object.
  */
 async function handleSearch(req, res) {
     try {
-        let all; // Variable para almacenar los resultados de la búsqueda
+        let all; // Variable to store search results.
 
-        // Determina qué tipo de búsqueda realizar basándose en los parámetros de la consulta
-        if (req.query.title) {
-            // Si se proporciona un parámetro 'title', realiza una búsqueda por título
+        // Determines which type of search to perform based on the query parameters
+         if (req.query.title) {
+            // If a 'title' parameter is provided, performs a search by title.
             all = await controller.fetchByTitle(req.query.title);
         } else if (req.query.author) {
-            // Si se proporciona un parámetro 'author', realiza una búsqueda por autor
+            // If an 'author' parameter is provided, performs a search by author.
             all = await controller.fetchByAuthor(req.query.author);
 
         } else if (req.query.language){
@@ -106,30 +106,30 @@ async function handleSearch(req, res) {
             all = await controller.fetchByIsbn(req.query.isbn);
 
         } else {
-            // Si no se proporciona ninguno de los parámetros anteriores, envía un error
+            // If none of the above parameters are provided, sends an error.
             return res.status(400).send({ error: "Se requiere un parámetro de búsqueda (atributos de libro)" });
         }
 
-        // Si la búsqueda es exitosa y se obtienen resultados, envía los resultados
+        // If the search is successful and results are obtained, send the results
         response.success(req, res, all, 200);
     } catch (error) {
-        // Maneja cualquier error que ocurra durante la búsqueda
+        // Handles any errors that occur during the search
         console.error("Error al realizer la búsqueda de un libro mediante sus atributos", error);
         response.error(req, res, "Internal server error", 500, error.message);
     }
 };
 
 /**
- * Actualiza un registro en la base de datos.
- * @param {Object} req - El objeto de solicitud Express, que contiene el nombre de la tabla, el campo ID, el valor ID y los datos de actualización.
- * @param {Object} res - El objeto de respuesta Express.
+ * Updates a record in the database.
+ * @param {Object} req - The Express request object, containing the table name, ID field, ID value, and update data.
+ * @param {Object} res - The Express response object.
  */
 async function updateRegister(req, res) {
     try {
-        // Descomponer el body para obtener los parámetros necesarios
+        // Destructure the body to get the necessary parameters
         const {idField, id, updateData } = req.body;
 
-        // Verificar si todos los parámetros necesarios están presentes
+        // Check if all necessary parameters are present
         if (!idField || !id || !updateData) {
             return response.error(req, res, "Datos insuficientes para la actualización", 400);
         }
@@ -148,9 +148,9 @@ async function updateRegister(req, res) {
 
 
 /**
- * Elimina un libro de la base de datos utilizando su ID.
- * @param {Object} req - El objeto de solicitud Express, que debe incluir el ID del libro como parámetro.
- * @param {Object} res - El objeto de respuesta Express.
+ * Deletes a book from the database using its ID.
+ * @param {Object} req - The Express request object, which must include the book ID as a parameter.
+ * @param {Object} res - The Express response object.
  */
 async function deleteById(req, res) {
     try {
@@ -167,5 +167,5 @@ async function deleteById(req, res) {
 };
 
 
-// Exportar el enrutador para ser utilizado en la aplicación principal.
+// Export the router to be used in the main application.
 module.exports = router;

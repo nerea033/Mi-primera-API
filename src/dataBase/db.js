@@ -1,17 +1,17 @@
 /**
- * Módulo para la gestión de la conexión y las operaciones de la base de datos MySQL.
- * Incluye funciones para agregar, buscar, actualizar y eliminar registros en una tabla específica.
+ * Module for managing the connection and operations of the MySQL database.
+ * Includes functions to add, search, update, and delete records in a specific table.
  *
  * @module db
  * @requires mysql2
- * @requires ../config - Configuración de la conexión a la base de datos.
+ * @requires ../config - Connection configuration for the database.
  */
 
 const mysql = require('mysql2');
 const config = require('../config');
 
 /**
- * Configuración para la conexión a la base de datos MySQL.
+ * Configuration for connecting to the MySQL database.
  */
 const dbconfig = {
     host: config.mysql.host,
@@ -25,7 +25,7 @@ const dbconfig = {
 let connection;
 
 /**
- * Establece una conexión con la base de datos y maneja reconexiones automáticas en caso de pérdidas de conexión.
+ * Establishes a connection to the database and handles automatic reconnections in case of connection losses.
  */
 function dbConnection(){
     connection = mysql.createConnection(dbconfig);
@@ -33,11 +33,11 @@ function dbConnection(){
     connection.connect((err) => {
         if(err){
             console.log('[db err]', err);
-            setTimeout(dbConnection, 2000); // Intenta reconectar después de 2 segundos
+            setTimeout(dbConnection, 2000); // Attempt to reconnect after 2 seconds.
 
         }else {
-            // Configuración de las variables de sesión después de establecer la conexión
-            connection.query('SET session wait_timeout = 3600', (err, results) => { // Lo establezco a 1 hora (3600 segundos)
+            // Set session variables after connection is established.
+            connection.query('SET session wait_timeout = 3600', (err, results) => { // Set it to 1 hour (3600 seconds).
                 if (err) throw err;
                 console.log('wait_timeout establecido');
             });
@@ -54,7 +54,7 @@ function dbConnection(){
     connection.on('error', err => {
         console.log('[db err]', err);
         if (err.code === 'PROTOCOL_CONNECTION_LOST') {
-            dbConnection(); //Si se desconecta, reconectar
+            dbConnection(); // If disconnected, reconnect
         } else {
             throw err;
         }
@@ -64,14 +64,14 @@ function dbConnection(){
 dbConnection();
 
 /**
- * Agrega un registro a una tabla especificada en la base de datos.
+ * Adds a record to a specified table in the database.
  *
- * @param {string} table - Nombre de la tabla en la base de datos.
- * @param {Object} registerData - Datos del registro a insertar en forma de objeto clave-valor.
- * @returns {Promise<Object>} Promesa que resuelve con el resultado de la operación de inserción.
+ * @param {string} table - Name of the table in the database.
+ * @param {Object} registerData - Data of the record to insert in key-value pair form.
+ * @returns {Promise<Object>} Promise that resolves with the result of the insertion operation.
  */
 function addRegister(table, registerData) {
-    // Filtrar datos para remover campos no definidos
+    // Filter data to remove undefined fields
     const data = {};
     for (const key in registerData) {
         if (registerData[key] !== undefined && registerData[key] !== null) {
@@ -79,12 +79,12 @@ function addRegister(table, registerData) {
         }
     }
 
-    // Obtener las claves (columnas) y los valores de los datos filtrados
+    // Get the keys (columns) and values of the filtered data.
     const columns = Object.keys(data);
     const values = Object.values(data);
     const placeholders = columns.map(() => '?').join(', ');
 
-    // Construir el query SQL dinámicamente
+    // Build the SQL query dynamically.
     const query = `
         INSERT INTO ${table} (${columns.join(', ')})
         VALUES (${placeholders});
@@ -102,10 +102,10 @@ function addRegister(table, registerData) {
 }
 
 /**
- * Recupera todos los registros de una tabla específica.
+ * Retrieves all records from a specific table.
  *
- * @param {string} table - Nombre de la tabla de donde se recuperarán los registros.
- * @returns {Promise<Array>} Promesa que resuelve con todos los registros de la tabla.
+ * @param {string} table - Name of the table from which to retrieve records.
+ * @returns {Promise<Array>} Promise that resolves with all records from the table.
  */
 function fetchAll(table) {
     return new Promise((resolve, reject) => {
@@ -120,11 +120,11 @@ function fetchAll(table) {
 }
 
 /**
- * Busca un usuario por su identificador único (uid) en una tabla especificada.
+ * Searches for a user by their unique identifier (uid) in a specified table.
  *
- * @param {string} table - Nombre de la tabla.
- * @param {number|string} uid - Identificador único del usuario.
- * @returns {Promise<Object>} Promesa que resuelve con el usuario encontrado.
+ * @param {string} table - Name of the table.
+ * @param {number|string} uid - Unique identifier of the user.
+ * @returns {Promise<Object>} Promise that resolves with the found user.
  */
 function fetchUser(table, uid) {
     return new Promise((resolve, reject) => {
@@ -139,11 +139,11 @@ function fetchUser(table, uid) {
 }
 
 /**
- * Busca registros en una tabla basada en un identificador de fila específico.
+ * Searches for records in a table based on a specific row identifier.
  *
- * @param {string} table - Nombre de la tabla.
- * @param {number|string} id - Identificador de la fila.
- * @returns {Promise<Object>} Promesa que resuelve con los registros encontrados.
+ * @param {string} table - Name of the table.
+ * @param {number|string} id - Row identifier.
+ * @returns {Promise<Object>} Promise that resolves with the found records.
  */
 function fetchById(table, id) {
     return new Promise((resolve, reject) => {
@@ -158,11 +158,11 @@ function fetchById(table, id) {
 }
 
 /**
- * Busca libros en una tabla por título usando una coincidencia aproximada (LIKE).
+ * Searches for books in a table by title using approximate matching (LIKE).
  *
- * @param {string} table - Nombre de la tabla donde se realizará la búsqueda.
- * @param {string} title - Título del libro a buscar.
- * @returns {Promise<Array>} Promesa que resuelve con los resultados de la búsqueda.
+ * @param {string} table - Name of the table where the search will be performed.
+ * @param {string} title - Title of the book to search for.
+ * @returns {Promise<Array>} Promise that resolves with the search results.
  */
 function fetchByTitle(table, title) {
     return new Promise((resolve, reject) => {
@@ -177,11 +177,11 @@ function fetchByTitle(table, title) {
 }
 
 /**
- * Busca registros en una tabla por autor usando una coincidencia aproximada (LIKE).
+ * Searches for records in a table by author using approximate matching (LIKE).
  *
- * @param {string} table - Nombre de la tabla donde se realizará la búsqueda.
- * @param {string} author - Autor de los libros a buscar.
- * @returns {Promise<Array>} Promesa que resuelve con los resultados de la búsqueda.
+ * @param {string} table - Name of the table where the search will be performed.
+ * @param {string} author - Author of the books to search for.
+ * @returns {Promise<Array>} Promise that resolves with the search results.
  */
 function fetchByAuthor(table, author) {
     return new Promise((resolve, reject) => {
@@ -196,11 +196,11 @@ function fetchByAuthor(table, author) {
 }
 
 /**
- * Busca registros en una tabla por idioma usando una coincidencia aproximada (LIKE).
+ * Searches for records in a table by language using approximate matching (LIKE).
  *
- * @param {string} table - Nombre de la tabla donde se realizará la búsqueda.
- * @param {string} language - Idioma de los libros a buscar.
- * @returns {Promise<Array>} Promesa que resuelve con los resultados de la búsqueda.
+ * @param {string} table - Name of the table where the search will be performed.
+ * @param {string} language - Language of the books to search for.
+ * @returns {Promise<Array>} Promise that resolves with the search results.
  */
 function fetchByLanguage(table, language){
     return new Promise((resolve, reject) => {
@@ -215,11 +215,11 @@ function fetchByLanguage(table, language){
 }
 
 /**
- * Busca registros en una tabla por categoría usando una coincidencia aproximada (LIKE).
+ * Searches for records in a table by category using approximate matching (LIKE).
  *
- * @param {string} table - Nombre de la tabla donde se realizará la búsqueda.
- * @param {string} category - Categoría de los libros a buscar.
- * @returns {Promise<Array>} Promesa que resuelve con los resultados de la búsqueda.
+ * @param {string} table - Name of the table where the search will be performed.
+ * @param {string} category - Category of the books to search for.
+ * @returns {Promise<Array>} Promise that resolves with the search results.
  */
 function fetchByCategory(table, category){
     return new Promise((resolve, reject) => {
@@ -235,11 +235,11 @@ function fetchByCategory(table, category){
 
 
 /**
- * Busca registros en una tabla por ISBN usando una coincidencia aproximada (LIKE).
+ * Searches for records in a table by ISBN using approximate matching (LIKE).
  *
- * @param {string} table - Nombre de la tabla donde se realizará la búsqueda.
- * @param {string} isbn - ISBN de los libros a buscar.
- * @returns {Promise<Array>} Promesa que resuelve con los resultados de la búsqueda.
+ * @param {string} table - Name of the table where the search will be performed.
+ * @param {string} isbn - ISBN of the books to search for.
+ * @returns {Promise<Array>} Promise that resolves with the search results.
  */
 function fetchByIsbn(table, isbn){
     return new Promise((resolve, reject) => {
@@ -255,17 +255,16 @@ function fetchByIsbn(table, isbn){
 
 
 /**
- * Actualiza los campos específicos de un registro en una tabla dada.
+ * Updates specific fields of a record in a given table.
  * 
- * @param {string} table - Nombre de la tabla en la base de datos donde se hará la actualización.
- * @param {string} idField - El nombre del campo que actúa como clave primaria o identificador único en la tabla.
- * @param {number|string} id - El valor de la clave primaria para la fila específica que se desea actualizar.
- * @param {Object} updateData - Un objeto que contiene los pares clave-valor que se desean actualizar.
- * @returns {Promise} Una promesa que se resuelve con el resultado de la operación de actualización de la base de datos.
+ * @param {string} table - Name of the table in the database where the update will occur.
+ * @param {string} idField - The name of the field acting as a primary key or unique identifier in the table.
+ * @param {number|string} id - The value of the primary key for the specific row to be updated.
+ * @param {Object} updateData - An object containing the key-value pairs to be updated.
+ * @returns {Promise} A promise that resolves with the result of the database update operation.
  */
-
 function updateRegister(table, idField, id, updateData) {
-    // Filtrar datos para remover campos no definidos y no relevantes para la actualización
+    // Filter data to remove undefined and irrelevant fields for updating.
     const filteredData = {};
     for (const key in updateData) {
         if (updateData[key] !== undefined && updateData[key] !== null) {
@@ -273,19 +272,19 @@ function updateRegister(table, idField, id, updateData) {
         }
     }
 
-    // Construir las partes del query de actualización
+    // Construct parts of the update query
     const updates = Object.keys(filteredData).map(key => `${key} = ?`);
     const values = Object.values(filteredData);
 
-    // Asegurarse de que el ID del registro está en los valores para la cláusula WHERE
+    // Ensure the record ID is in the values for the WHERE clause
     values.push(id);
 
-    // Construir el query SQL dinámicamente
+     // Dynamically construct the SQL query
     const query = `
         UPDATE ${table}
         SET ${updates.join(', ')}
         WHERE ${idField} = ?; 
-    `; // '?' equivale a 'id'
+    `; // '?' is equivalent to 'id'
 
     return new Promise((resolve, reject) => {
         connection.query(query, values, (error, results) => {
@@ -299,11 +298,11 @@ function updateRegister(table, idField, id, updateData) {
 }
 
 /**
- * Elimina un usuario por su identificador en la base de datos.
+ * Deletes a user by their identifier in the database.
  * 
- * @param {string} table - Nombre de la tabla de la cual se eliminará el registro.
- * @param {number|string} uid - El valor del identificador del registro a eliminar.
- * @returns {Promise<Object>} Una promesa que se resuelve con el resultado de la operación de eliminación.
+ * @param {string} table - Name of the table from which the record will be deleted.
+ * @param {number|string} uid - The value of the identifier of the record to be deleted.
+ * @returns {Promise<Object>} A promise that resolves with the result of the deletion operation.
  */
 function deleteByUid(table, uid) {
     return new Promise((resolve, reject) => {
@@ -318,11 +317,11 @@ function deleteByUid(table, uid) {
 }
 
 /**
- * Elimina un registro por su identificador de una tabla específica en la base de datos.
+ * Deletes a record by its identifier from a specific table in the database.
  * 
- * @param {string} table - Nombre de la tabla de la cual se eliminará el registro.
- * @param {number|string} id - El valor del identificador del registro a eliminar.
- * @returns {Promise<Object>} Una promesa que se resuelve con el resultado de la operación de eliminación.
+ * @param {string} table - Name of the table from which the record will be deleted.
+ * @param {number|string} id - The value of the identifier of the record to be deleted.
+ * @returns {Promise<Object>} A promise that resolves with the result of the deletion operation.
  */
 function deleteById(table, id) {
     return new Promise((resolve, reject) => {

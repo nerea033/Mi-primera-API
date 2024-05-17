@@ -1,26 +1,26 @@
 /**
- * Módulo de configuración para la aplicación.
+ * Configuration module for the application.
  * 
- * Carga las variables de entorno desde un archivo `.env` utilizando `dotenv` y
- * define la configuración necesaria para la aplicación y la base de datos MySQL.
+ * Loads environment variables from a .env file using dotenv and
+ * defines the necessary configuration for the application and MySQL database.
  * 
  * @module config
  * @requires dotenv
  */
 
 /**
- * Invoca la función `config` de `dotenv` para que las variables de entorno definidas
- * en el archivo `.env` estén disponibles a través de `process.env`.
+ * Invokes the config function of dotenv so that environment variables defined
+ * in the .env file are available through 'process.env'.
  */
 require('dotenv').config();
 
 
 /**
- * Exporta un objeto de configuración con ajustes para la aplicación y la base de datos.
+ * Exports a configuration object with settings for the application and the database.
  */
 module.exports = {
     app: {
-        port: process.env.PORT || 4000 //coge el puerto que he asignado pero si no lo reconoce coge el 4000
+        port: process.env.PORT || 4000 // Takes the assigned port but defaults to 4000 if not recognized.
     },
     mysql: {
         host: process.env.MYSQL_HOST || 'sql.freedb.tech',
