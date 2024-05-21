@@ -9,6 +9,8 @@
 
 const mysql = require('mysql2');
 const config = require('../config');
+const moment = require('moment');
+
 
 /**
  * Configuration for connecting to the MySQL database.
@@ -79,6 +81,12 @@ function addRegister(table, registerData) {
         }
     }
 
+        // Handle special formatting for specific fields
+        if (data.date) {
+            data.date = formatDate(data.date); // Format date if necessary
+            console.log('Formatted date:', data.date); // Verificar el formato de la fecha formateada
+        }
+
     // Get the keys (columns) and values of the filtered data.
     const columns = Object.keys(data);
     const values = Object.values(data);
@@ -101,6 +109,21 @@ function addRegister(table, registerData) {
     });
 }
 
+// Helper function to format date to YYYY-MM-DD
+function formatDate(date) {
+    // If date is a string in the format 'YYYY-MM-DD', simply return the same string
+    if (typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date)) {
+        return date; // Return the same format if it's already in 'YYYY-MM-DD'
+    }
+    
+    // If date is a Date object or a number (assuming a timestamp), format it as 'YYYY-MM-DD'
+    if (date instanceof Date || typeof date === 'number') {
+        return moment.utc(date).format('YYYY-MM-DD');
+    }
+
+    throw new Error('Invalid date format');
+}
+
 /**
  * Retrieves all records from a specific table.
  *
@@ -114,9 +137,29 @@ function fetchAll(table) {
             if (error) {
                 return reject(error);
             }
-            resolve(result);
+            
+            // Format the 'date' in each result
+            const formattedResults = result.map(row => {
+                const formattedRow = { ...row };
+                formattedRow.date = formatDatabaseDate(row.date); // Format the 'date'
+                return formattedRow;
+            });
+
+            resolve(formattedResults);
+            // resolve(result);
         });
     });
+}
+
+// Function to format the date to 'YYYY-MM-DD'
+function formatDatabaseDate(date) {
+    // If date is a Date object or a string in 'YYYY-MM-DD' format, format it accordingly
+    if (date instanceof Date) {
+        return moment.utc(date).format('YYYY-MM-DD');
+    } else if (typeof date === 'string') {
+        return moment.utc(date, 'YYYY-MM-DD').format('YYYY-MM-DD');
+    }
+    return null; // Return null if the date is invalid
 }
 
 /**
@@ -152,6 +195,12 @@ function fetchById(table, id) {
             if (error) {
                 return reject(error);
             }
+
+            // If a result is found, format the 'date'
+            if (result.length > 0) {
+                result[0].date = formatDatabaseDate(result[0].date);
+            }
+
             resolve(result);
         });
     });
@@ -171,7 +220,15 @@ function fetchByTitle(table, title) {
             if (error) {
                 return reject(error);
             }
-            resolve(result);
+
+            // Format the 'date' in each result
+            const formattedResults = result.map(row => {
+                const formattedRow = { ...row };
+                formattedRow.date = formatDatabaseDate(row.date); // Format the 'date'
+                return formattedRow;
+            });
+
+            resolve(formattedResults);
         });
     });
 }
@@ -190,7 +247,14 @@ function fetchByAuthor(table, author) {
             if (error) {
                 return reject(error);
             }
-            resolve(result);
+            // Format the 'date' in each result
+            const formattedResults = result.map(row => {
+                const formattedRow = { ...row };
+                formattedRow.date = formatDatabaseDate(row.date); // Format the 'date'
+                return formattedRow;
+            });
+            
+            resolve(formattedResults);
         });
     });
 }
@@ -209,7 +273,14 @@ function fetchByLanguage(table, language){
             if (error) {
                 return reject(error);
             }
-            resolve(result);
+            // Format the 'date' in each result
+            const formattedResults = result.map(row => {
+                const formattedRow = { ...row };
+                formattedRow.date = formatDatabaseDate(row.date); // Format the 'date'
+                return formattedRow;
+            });
+            
+            resolve(formattedResults);
         });
     });
 }
@@ -228,7 +299,14 @@ function fetchByCategory(table, category){
             if (error){
                 return reject(error);
             }
-            resolve(result);
+            // Format the 'date' in each result
+            const formattedResults = result.map(row => {
+                const formattedRow = { ...row };
+                formattedRow.date = formatDatabaseDate(row.date); // Format the 'date'
+                return formattedRow;
+            });
+
+            resolve(formattedResults);
         });
     });
 }
@@ -248,6 +326,12 @@ function fetchByIsbn(table, isbn){
             if (error){
                 return reject(error);
             }
+
+            // If a result is found, format the 'date'
+            if (result.length > 0) {
+                result[0].date = formatDatabaseDate(result[0].date);
+            }
+            
             resolve(result);
         });
     });
@@ -271,6 +355,12 @@ function updateRegister(table, idField, id, updateData) {
             filteredData[key] = updateData[key];
         }
     }
+    
+            // Handle special formatting for specific fields
+            if (data.date) {
+                data.date = formatDate(data.date); // Format date if necessary
+                console.log('Formatted date:', data.date); // Verificar el formato de la fecha formateada
+            }
 
     // Construct parts of the update query
     const updates = Object.keys(filteredData).map(key => `${key} = ?`);
