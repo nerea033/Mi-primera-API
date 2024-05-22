@@ -37,7 +37,7 @@ function fetchAll() {
  * @returns {Promise} A promise that resolves with the user data.
  */
 function fetchUser(uid) {
-    return db.fetchUser(TABLA, uid)
+    return db.fetchByUid(TABLA, uid)
 }
 
 /**

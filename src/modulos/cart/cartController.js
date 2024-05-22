@@ -28,12 +28,12 @@ function fetchAll() {
 }
 
 /**
- * Fetches cart by its ID.
- * @param {string} id - The ID of the cart to fetch.
+ * Fetches cart by its user uid.
+ * @param {string} uid - The uid of the cart to fetch.
  * @returns {Promise} A Promise representing the result of the database operation.
  */
-function fetchById(id) {
-    return db.fetchById(TABLA, id)
+function fetchByUid(uid) {
+    return db.fetchByUid(TABLA, uid)
 }
 
 /**
@@ -43,8 +43,8 @@ function fetchById(id) {
  * @param {Object} updateData - The data to update in the record.
  * @returns {Promise} A Promise representing the result of the database operation.
  */
-function updateRegister(idField, id, updateData){
-    return db.updateRegister(TABLA, idField, id, updateData)
+function updateRegister(uid, id_book, quantity){
+    return db.updateCart(TABLA, uid, id_book, quantity)
 }
 
 /**
@@ -52,15 +52,15 @@ function updateRegister(idField, id, updateData){
  * @param {string} id - The ID of the cart to delete.
  * @returns {Promise} A Promise representing the result of the database operation.
  */
-function deleteById(id) {
-    return db.deleteById(TABLA, id);
+function deleteCart(uid, id_book) {
+    return db.deleteCart(TABLA, uid, id_book);
 }
 
 
 module.exports = {
     addCart,
     fetchAll,
-    fetchById,
+    fetchByUid,
     updateRegister,
-    deleteById,
+    deleteCart,
 }

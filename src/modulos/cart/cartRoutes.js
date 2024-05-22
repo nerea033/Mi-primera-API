@@ -18,11 +18,11 @@ const router = express.Router();
 // Route configuration for CRUD operations. Each route corresponds to a database operation.
 // Routes are defined with attention to the order of specificity: the most specific routes go first.
 
-router.get('/:id', fetchById);           // Specific - handles IDs
-router.delete('/:id', deleteById);       // Likewise, specific but with DELETE method
+router.get('/:uid', fetchByUid);           // Specific - handles UIDs
 router.get('/', fetchAll);               // General - at the end
 router.post('/', addCart);
 router.put('/update', updateRegister);
+router.delete('/delete', deleteCart)
 
 
 /**
@@ -60,20 +60,20 @@ async function fetchAll(req, res) {
 };
 
 /**
- * Fetches a specific cart record by its ID.
- * @param {Object} req - The Express request object, which should include the cart ID as a parameter.
+ * Fetches a specific cart record by the user uid.
+ * @param {Object} req - The Express request object, which should include the user uid as a parameter.
  * @param {Object} res - The Express response object.
  */
-async function fetchById(req, res) {
+async function fetchByUid(req, res) {
     try {
-        const cart = await controller.fetchById(req.params.id);
+        const cart = await controller.fetchByUid(req.params.uid);
         if (!cart) {
             response.error(req, res, "No se encontró el registro en el carrito", 404);
         } else {
             response.success(req, res, cart, 200);
         }
     } catch (error) {
-        console.error("Error al busar un rgisto por id en el carrito", error);
+        console.error("Error al busar un registo por uid en el carrito", error);
         response.error(req, res, "Error interno del servidor", 500, error.message);
     }
 }
@@ -81,20 +81,20 @@ async function fetchById(req, res) {
 
 /**
  * Updates a record in the database.
- * @param {Object} req - The Express request object, containing the table name, the ID field, the ID value, and the update data.
+ * @param {Object} req - The Express request object, containing the table name, the UID and id_book field, and the update data.
  * @param {Object} res - The Express response object.
  */
 async function updateRegister(req, res) {
     try {
         // Destructure the body to get the necessary parameters.
-        const {idField, id, updateData } = req.body;
+        const {uid, id_book, quantity} = req.body;
 
-        // Verify if all necessary parameters are present.
-        if (!idField || !id || !updateData) {
+        // Verify if all necessary parameters are present and not null.
+        if (uid == null || id_book == null || quantity == null) {
             return response.error(req, res, "Datos insuficientes para la actualización", 400);
         }
 
-        const result = await controller.updateRegister(idField, id, updateData);
+        const result = await controller.updateRegister(uid, id_book, quantity);
         if (result.affectedRows > 0) {
             response.success(req, res, "Registro actualizado con éxito", 200);
         } else {
@@ -108,23 +108,34 @@ async function updateRegister(req, res) {
 
 
 /**
- * Deletes a record from the cart table by its ID.
- * @param {Object} req - The Express request object, which should include the cart record ID as a parameter.
+ * Deletes a record from the cart table by its uid and id_book.
+ * @param {Object} req - The Express request object, which should include the cart record uid and id_book as a parameter.
  * @param {Object} res - The Express response object.
  */
-async function deleteById(req, res) {
+async function deleteCart(req, res) {
     try {
-        const resultado = await controller.deleteById(req.params.id); 
-        if (resultado.affectedRows > 0) {
-            response.success(req, res, "Registro eliminado con éxito", 200);
+        // Destructure the body to get the necessary parameters.
+        const { uid, id_book } = req.body;
+
+        // Verify if all necessary parameters are present and not null.
+        if (uid == null || id_book == null) {
+            return response.error(req, res, "Datos insuficientes para la eliminación", 400);
+        }
+
+        // Call the controller function to delete the cart item.
+        const result = await controller.deleteCart(uid, id_book);
+
+        // Check if any rows were affected (i.e., deleted)
+        if (result.affectedRows > 0) {
+            return response.success(req, res, "Registro eliminado con éxito", 200);
         } else {
-            response.error(req, res, "Registro no encontrado", 404);
+            return response.error(req, res, "Registro no encontrado", 404);
         }
     } catch (error) {
-        console.error("Error al eliminar un rgistro mediante 'id' en el carrito", error);
-        response.error(req, res, "Internal server error", 500, error.message); 
+        console.error("Error al eliminar un registro del carrito", error);
+        return response.error(req, res, "Internal server error", 500, error.message); 
     }
-};
+}
 
 
 // Export the router to be used in the main application.

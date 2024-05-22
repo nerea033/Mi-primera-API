@@ -29,39 +29,28 @@ function fetchAll() {
 }
 
 /**
- * Fetches a specific favorite record by its ID.
- * @param {number} id - The ID of the favorite record to fetch.
+ * Fetches a specific favorite record by its user UID.
+ * @param {number} uid - The uid of the favorite record to fetch.
  * @returns {Promise} - A promise that resolves with the fetched record.
  */
-function fetchById(id) {
-    return db.fetchById(TABLA, id)
+function fetchByUid(uid) {
+    return db.fetchByUid(TABLA, uid)
 }
 
 /**
- * Updates a specific record in the favorites table.
- * @param {string} idField - The name of the ID field.
- * @param {number} id - The ID of the record to update.
- * @param {Object} updateData - The data to update the record with.
- * @returns {Promise} - A promise that resolves when the record is updated.
- */
-function updateRegister(idField, id, updateData){
-    return db.updateRegister(TABLA, idField, id, updateData)
-}
-
-/**
- * Deletes a specific favorite record by its ID.
- * @param {number} id - The ID of the favorite record to delete.
+ * Deletes a specific favorite record by its uid and id_book.
+ * @param {String} uid - The uid of thr favorite record to delete
+ * @param {number} id_book - The id_book of the favorite record to delete.
  * @returns {Promise} - A promise that resolves when the record is deleted.
  */
-function deleteById(id) {
-    return db.deleteById(TABLA, id);
+function deleteFavorites(uid, id_book) {
+    return db.deleteCart(TABLA, uid, id_book);
 }
 
 
 module.exports = {
     addFavorites,
     fetchAll,
-    fetchById,
-    updateRegister,
-    deleteById,
+    fetchByUid,
+    deleteFavorites,
 }

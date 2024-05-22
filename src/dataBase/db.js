@@ -10,6 +10,7 @@
 const mysql = require('mysql2');
 const config = require('../config');
 const moment = require('moment');
+const { query } = require('express');
 
 
 /**
@@ -169,7 +170,7 @@ function formatDatabaseDate(date) {
  * @param {number|string} uid - Unique identifier of the user.
  * @returns {Promise<Object>} Promise that resolves with the found user.
  */
-function fetchUser(table, uid) {
+function fetchByUid(table, uid) {
     return new Promise((resolve, reject) => {
         const query = 'SELECT * FROM ?? WHERE uid = ?';
         connection.query(query, [table, uid], (error, result) => {
@@ -387,6 +388,27 @@ function updateRegister(table, idField, id, updateData) {
     });
 }
 
+function updateCart(table, uid, id_book, quantity) {
+    const query = `
+    UPDATE ${table}
+    SET quantity = ?
+    WHERE uid = ? AND id_book = ?;
+    `;
+    
+    const values = [quantity, uid, id_book];
+
+    return new Promise((resolve, reject) => {
+        connection.query(query, values, (error, results) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(results);
+            }
+        });
+    });
+}
+
+
 /**
  * Deletes a user by their identifier in the database.
  * 
@@ -425,11 +447,22 @@ function deleteById(table, id) {
     });
 }
 
+function deleteCart(table, uid, id_book){
+    return new Promise((resolve, reject) => {
+        const query = 'DELETE FROM ?? WHERE uid = ? AND id_book = ?';
+        connection.query(query, [table, uid, id_book], (error, result) => {
+            if (error) {
+                return reject(error);
+            }
+            resolve(result);
+        });
+    });
+}
 
 module.exports = {
     addRegister,
     fetchAll,
-    fetchUser,
+    fetchByUid,
     fetchById,
     fetchByTitle,
     fetchByAuthor,
@@ -437,6 +470,8 @@ module.exports = {
     fetchByCategory,
     fetchByIsbn,
     updateRegister,
+    updateCart,
     deleteByUid,
     deleteById,
+    deleteCart
 }

@@ -18,12 +18,10 @@ const router = express.Router();
 // Route configuration for CRUD operations. Each route corresponds to a database operation.
 // Routes are defined with attention to order specificity: more specific routes go first.
 
-router.get('/:id', fetchById);           // Specific - handles IDs
-router.delete('/:id', deleteById);       // Also specific but with DELETE method
+router.get('/:uid', fetchByUid);           // Specific - handles UIDs
 router.get('/', fetchAll);               // General - at the end
 router.post('/', addFavorites);
-router.put('/update', updateRegister);
-
+router.delete('/delete', deleteFavorites)
 
 /**
  * Adds a new record to the favorites table.
@@ -60,71 +58,54 @@ async function fetchAll(req, res) {
 };
 
 /**
- * Recupera un registro específico en favoritos por su ID.
- * @param {Object} req - El objeto de solicitud Express, que debe incluir el ID de favoritos como parámetro.
+ * Recupera un registro específico en favoritos por su uid.
+ * @param {Object} req - El objeto de solicitud Express, que debe incluir el uid de favoritos como parámetro.
  * @param {Object} res - El objeto de respuesta Express.
  */
-async function fetchById(req, res) {
+async function fetchByUid(req, res) {
     try {
-        const cart = await controller.fetchById(req.params.id);
+        const cart = await controller.fetchByUid(req.params.uid);
         if (!cart) {
             response.error(req, res, "No se encontró el registro en favoritos", 404);
         } else {
             response.success(req, res, cart, 200);
         }
     } catch (error) {
-        console.error("Error al busar un rgisto por id en favoritos", error);
+        console.error("Error al busar un rgisto por uid en favoritos", error);
         response.error(req, res, "Error interno del servidor", 500, error.message);
     }
 }
 
 
 /**
- * Updates a record in the database.
- * @param {Object} req - The Express request object, containing the table name, ID field, ID value, and update data.
+ * Deletes a favorite record using its uid and id_book.
+ * @param {Object} req - The Express request object, which should include the record uid and id_book as a parameter.
  * @param {Object} res - The Express response object.
  */
-async function updateRegister(req, res) {
+async function deleteFavorites(req, res) {
     try {
         // Destructure the body to get the necessary parameters.
-        const {idField, id, updateData } = req.body;
+        const { uid, id_book } = req.body;
 
-        // Verify that all necessary parameters are present.
-        if (!idField || !id || !updateData) {
-            return response.error(req, res, "Datos insuficientes para la actualización", 400);
+        // Verify if all necessary parameters are present and not null.
+        if (uid == null || id_book == null) {
+            return response.error(req, res, "Datos insuficientes para la eliminación", 400);
         }
 
-        const result = await controller.updateRegister(idField, id, updateData);
+        // Call the controller function to delete the cart item.
+        const result = await controller.deleteFavorites(uid, id_book);
+
+        // Check if any rows were affected (i.e., deleted)
         if (result.affectedRows > 0) {
-            response.success(req, res, "Registro actualizado con éxito", 200);
+            return response.success(req, res, "Registro eliminado con éxito", 200);
         } else {
-            response.error(req, res, "No se encontró el registro para actualizar", 404);
+            return response.error(req, res, "Registro no encontrado", 404);
         }
     } catch (error) {
-        console.error("Error al actualizar el registro:", error);
-        response.error(req, res, "Error del servidor interno", 500, error.message);
+        console.error("Error al eliminar un registro de favoritos", error);
+        return response.error(req, res, "Internal server error", 500, error.message); 
     }
 }
-
-
-/**
- * Deletes a favorite record using its ID.
- * @param {Object} req - The Express request object, which should include the record ID as a parameter.
- * @param {Object} res - The Express response object.
- */
-async function deleteById(req, res) {
-    try {
-        const resultado = await controller.deleteById(req.params.id); 
-        if (resultado.affectedRows > 0) {
-            response.success(req, res, "Registro eliminado con éxito", 200);
-        } else {
-            response.error(req, res, "Registro no encontrado", 404);
-        }
-    } catch (error) {
-        console.error("Error al eliminar un registro mediante 'id' en favoritos", error);
-        response.error(req, res, "Internal server error", 500, error.message); 
-    }
-};
 
 
 // Export the router to be used in the main application.
