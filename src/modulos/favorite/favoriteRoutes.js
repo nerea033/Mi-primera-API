@@ -21,7 +21,7 @@ const router = express.Router();
 router.get('/:uid', fetchByUid);           // Specific - handles UIDs
 router.get('/', fetchAll);               // General - at the end
 router.post('/', addFavorites);
-router.delete('/delete', deleteFavorites)
+router.delete('/delete/:uid/:id_book', deleteFavorites)
 
 /**
  * Adds a new record to the favorites table.
@@ -84,11 +84,11 @@ async function fetchByUid(req, res) {
  */
 async function deleteFavorites(req, res) {
     try {
-        // Destructure the body to get the necessary parameters.
-        const { uid, id_book } = req.body;
+        const uid = req.params.uid;
+        const id_book = req.params.id_book;
 
-        // Verify if all necessary parameters are present and not null.
-        if (uid == null || id_book == null) {
+        // Verify if all necessary parameters are present and valid.
+        if (!uid || !id_book) {
             return response.error(req, res, "Datos insuficientes para la eliminación", 400);
         }
 

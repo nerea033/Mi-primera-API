@@ -22,7 +22,7 @@ router.get('/:uid', fetchByUid);           // Specific - handles UIDs
 router.get('/', fetchAll);               // General - at the end
 router.post('/', addCart);
 router.put('/update', updateRegister);
-router.delete('/delete', deleteCart)
+router.delete('/delete/:uid/:id_book', deleteCart)
 
 
 /**
@@ -114,11 +114,11 @@ async function updateRegister(req, res) {
  */
 async function deleteCart(req, res) {
     try {
-        // Destructure the body to get the necessary parameters.
-        const { uid, id_book } = req.body;
+        const uid = req.params.uid;
+        const id_book = req.params.id_book;
 
-        // Verify if all necessary parameters are present and not null.
-        if (uid == null || id_book == null) {
+        // Verify if all necessary parameters are present and valid.
+        if (!uid || !id_book) {
             return response.error(req, res, "Datos insuficientes para la eliminación", 400);
         }
 
@@ -129,6 +129,7 @@ async function deleteCart(req, res) {
         if (result.affectedRows > 0) {
             return response.success(req, res, "Registro eliminado con éxito", 200);
         } else {
+            console.error("Registro no encontrado", error);
             return response.error(req, res, "Registro no encontrado", 404);
         }
     } catch (error) {
