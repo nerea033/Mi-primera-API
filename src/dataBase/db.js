@@ -358,9 +358,9 @@ function updateRegister(table, idField, id, updateData) {
     }
     
             // Handle special formatting for specific fields
-            if (data.date) {
-                data.date = formatDate(data.date); // Format date if necessary
-                console.log('Formatted date:', data.date); // Verificar el formato de la fecha formateada
+            if (updateData.date) {
+                updateData.date = formatDate(updateData.date); // Format date if necessary
+                console.log('Formatted date:', updateData.date); // Verificar el formato de la fecha formateada
             }
 
     // Construct parts of the update query
