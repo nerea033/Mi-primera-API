@@ -349,6 +349,11 @@ function fetchByIsbn(table, isbn){
  * @returns {Promise} A promise that resolves with the result of the database update operation.
  */
 function updateRegister(table, idField, id, updateData) {
+
+    /// Ensure updateData is a flat object
+    if (Array.isArray(updateData)) {
+        updateData = updateData[0];
+    }
     // Filter data to remove undefined and irrelevant fields for updating.
     const filteredData = {};
     for (const key in updateData) {
@@ -358,9 +363,9 @@ function updateRegister(table, idField, id, updateData) {
     }
     
             // Handle special formatting for specific fields
-            if (updateData.date) {
-                updateData.date = formatDate(updateData.date); // Format date if necessary
-                console.log('Formatted date:', updateData.date); // Verificar el formato de la fecha formateada
+            if (filteredData.date) {
+                filteredData.date = formatDate(filteredData.date); // Format date if necessary
+                console.log('Formatted date:', filteredData.date); // Verificar el formato de la fecha formateada
             }
 
     // Construct parts of the update query
