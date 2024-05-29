@@ -41,6 +41,17 @@ function fetchUser(uid) {
 }
 
 /**
+ * Updates a username record in the database.
+ * @param {string} idField - The name of the ID field.
+ * @param {string} id - The ID of the user to update.
+ * @param {Object} updateData - The data to update in the book record.
+ * @returns {Promise} A promise that resolves with the result of the database operation.
+ */
+function updateRegister(idField, id, updateData){
+    return db.updateRegister(TABLA, idField, id, updateData)
+}
+
+/**
  * Deletes a user by UID.
  * 
  * @param {string} iud - The UID of the user to delete.
@@ -54,5 +65,6 @@ module.exports = {
     addUser,
     fetchAll,
     fetchUser,
+    updateRegister,
     deleteByUid
 }

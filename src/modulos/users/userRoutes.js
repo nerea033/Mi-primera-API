@@ -20,6 +20,7 @@ router.post('/', addUser)       // Route to add a user.
 router.delete('/:uid', deleteByUid)  // Route to delete a user by UID.
 router.get('/:uid', fetchUser)  //  Route to get a specific user by UID. (specific).
 router.get('/', fetchAll)       // Route to get all user records. (generic).
+router.put('/update', updateRegister);
 
 /**
  * Route to add a new user.
@@ -75,6 +76,33 @@ async function fetchUser(req, res) {
         response.error(req, res, "Internal server error", 500, error.message); 
     }
 };
+
+/**
+ * Updates a record in the database.
+ * @param {Object} req - The Express request object, containing the table name, ID field, ID value, and update data.
+ * @param {Object} res - The Express response object.
+ */
+async function updateRegister(req, res) {
+    try {
+        // Destructure the body to get the necessary parameters
+        const {idField, id, updateData } = req.body;
+
+        // Check if all necessary parameters are present
+        if (!idField || !id || !updateData) {
+            return response.error(req, res, "Datos insuficientes para la actualización", 400);
+        }
+
+        const result = await controller.updateRegister(idField, id, updateData);
+        if (result.affectedRows > 0) {
+            response.success(req, res, "Registro actualizado con éxito", 200);
+        } else {
+            response.error(req, res, "No se encontró el registro para actualizar", 404);
+        }
+    } catch (error) {
+        console.error("Error al actualizar el registro:", error);
+        response.error(req, res, "Error del servidor interno", 500, error.message);
+    }
+}
 
 /**
  * Route to delete a user by UID.
