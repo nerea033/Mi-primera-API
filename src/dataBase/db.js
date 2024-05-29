@@ -452,6 +452,14 @@ function deleteById(table, id) {
     });
 }
 
+/**
+ * Deletes a record in CART from a specific user
+ * 
+ * @param {string} table - Name of the table from which the record will be deleted.
+ * @param {string} uid - The value of the identifier of the user to be deleted.
+ * @param {number} id_book - The value of the identifier of the record to be deleted.
+ * @returns {Promise<Object>} A promise that resolves with the result of the deletion operation.
+ */
 function deleteCart(table, uid, id_book){
     return new Promise((resolve, reject) => {
         const query = 'DELETE FROM ?? WHERE uid = ? AND id_book = ?';

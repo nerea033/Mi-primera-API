@@ -48,7 +48,7 @@ function updateRegister(uid, id_book, quantity){
 }
 
 /**
- * Deletes cart by its ID.
+ * Deletes records in cart by its ID.
  * @param {string} id - The ID of the cart to delete.
  * @returns {Promise} A Promise representing the result of the database operation.
  */
@@ -56,6 +56,15 @@ function deleteCart(uid, id_book) {
     return db.deleteCart(TABLA, uid, id_book);
 }
 
+/**
+* Deletes all record in CART by his UID.
+* 
+* @param {string} uid - The UID of the user to delete.
+* @returns {Promise} A promise that resolves when the user is deleted.
+*/
+function deleteByUid(uid) {
+   return db.deleteByUid(TABLA, uid);
+}
 
 module.exports = {
     addCart,
@@ -63,4 +72,5 @@ module.exports = {
     fetchByUid,
     updateRegister,
     deleteCart,
+    deleteByUid,
 }

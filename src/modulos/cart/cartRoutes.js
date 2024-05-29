@@ -22,6 +22,7 @@ router.get('/:uid', fetchByUid);           // Specific - handles UIDs
 router.get('/', fetchAll);               // General - at the end
 router.post('/', addCart);
 router.put('/update', updateRegister);
+router.delete('/delete/:uid', deleteByUid)  // Route to delete a register by user UID.
 router.delete('/delete/:uid/:id_book', deleteCart)
 
 
@@ -137,6 +138,27 @@ async function deleteCart(req, res) {
         return response.error(req, res, "Internal server error", 500, error.message); 
     }
 }
+
+/**
+ * Route to delete all the record of a user in CART
+ * Uses the deleteByUid method from the controller to delete records from the database using the user UID.
+ *
+ * @param {express.Request} req - The Express request object, which should include the user's UID as a parameter.
+ * @param {express.Response} res - The Express response object.
+ */
+async function deleteByUid(req, res) {
+    try {
+        const resultado = await controller.deleteByUid(req.params.uid); 
+        if (resultado.affectedRows > 0) {
+            response.success(req, res, "Registros del usuario eliminadod con éxito", 200);
+        } else {
+            response.error(req, res, "Usuario no encontrado en el carrito", 404);
+        }
+    } catch (error) {
+        console.error("Error en el servidor al eliminar los registros de un usuario mediante su identificador")
+        response.error(req, res, "Internal server error", 500, error.message); 
+    }
+};
 
 
 // Export the router to be used in the main application.

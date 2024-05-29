@@ -43,11 +43,11 @@ function fetchUser(uid) {
 /**
  * Deletes a user by UID.
  * 
- * @param {string} id - The UID of the user to delete.
+ * @param {string} iud - The UID of the user to delete.
  * @returns {Promise} A promise that resolves when the user is deleted.
  */
-function deleteByUid(id) {
-    return db.deleteByUid(TABLA, id);
+function deleteByUid(uid) {
+    return db.deleteByUid(TABLA, uid);
 }
 
 module.exports = {
