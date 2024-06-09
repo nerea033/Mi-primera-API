@@ -24,9 +24,9 @@ module.exports = {
     },
     mysql: {
         host: process.env.MYSQL_HOST || 'sql.freedb.tech',
-        user: process.env.MYSQL_USER || 'freedb_nerea',
-        password: process.env.MYSQL_PSW || '6%p!n%QneUDQV7h',
-        database: process.env.MYSQL_DB || 'freedb_PaperWingsDB',
+        user: process.env.MYSQL_USER || 'freedb_Nerea',
+        password: process.env.MYSQL_PSW || 'GRv2j@nn7K8TbC4',
+        database: process.env.MYSQL_DB || 'freedb_PaperWings',
         port: parseInt(process.env.MYSQL_PORT, 10) || 3306
     }
 }
